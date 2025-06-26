@@ -1,0 +1,29 @@
+<launch>
+  <!-- 1. Запуск Gazebo с пустым миром -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+  <!-- 2. Загрузка параметров контроллеров -->
+  <rosparam file="$(find pioneer_description)/config/pioneer_control.yaml" command="load"/>
+
+  <!-- 3. Загрузка URDF (Xacro) модели -->
+  <param name="robot_description" command="$(find xacro)/xacro $(find pioneer_description)/urdf/pioneer_robot.xacro"/>
+
+  <!-- 4. robot_state_publisher для публикации TF -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- 5. Спавн робота в Gazebo -->
+  <node name="spawn_robot" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -param robot_description -model pioneer_robot"/>
+
+  <!-- 6. Задержка перед запуском контроллеров -->
+  <node pkg="controller_manager" type="spawner" name="controller_spawner"
+        args="joint_state_controller left_wheel_effort_controller right_wheel_effort_controller front_yaw_position_controller diff_drive_controller"
+        output="screen">
+    <param name="wait_for_gazebo" value="true"/>
+  </node>
+
+  <!-- 7. Запуск RViz с конфигурацией -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pioneer_description)/rviz/pioneer_config.rviz" />
+
+  <node name="pioneer_control" pkg="pioneer_description" type="pioneer_control_node.py" output="screen"/>
+</launch>

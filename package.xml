@@ -58,6 +58,9 @@
   <exec_depend>gazebo_ros</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
+  <depend>controller_manager</depend>
+  <depend>effort_controllers</depend>
+  <depend>joint_state_controller</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->
