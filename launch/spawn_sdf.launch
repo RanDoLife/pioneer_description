@@ -1,0 +1,9 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+  <param name="robot_description"
+         command="$(find xacro)/xacro '$(find pioneer_description)/models/pioneer2dx/model.sdf'" />
+
+  <node name="spawn_model" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-sdf -model pioneer2dx -file $(find pioneer_description)/models/pioneer2dx/model.sdf"/>
+</launch>
